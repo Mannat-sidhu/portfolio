@@ -1,0 +1,37 @@
+---
+// A jaali: a carved stone lattice of octagons with an eight-point star in each, drawn as one SVG.
+// Tile corners are the "tie points" (nodes) where threads are tied; motion/threads.ts reads them.
+// Purely decorative: aria-hidden. Square tiles, so the lattice scales with its width.
+interface Props {
+  id?: string;
+  cols: number;
+  rows: number;
+  phoneCols?: number;   // on phones, show this many columns (the rest is cropped)
+  class?: string;
+  nodes?: boolean;      // emit node markers for threads (default true)
+}
+const { id, cols, rows, phoneCols, class: cls = '', nodes = true } = Astro.props;
+const T = 100;
+const a = 30; // octagon corner cut
+let d = '';
+for (let r = 0; r < rows; r++) {
+  for (let c = 0; c < cols; c++) {
+    const x = c * T, y = r * T;
+    // octagon
+    d += `M${x + a} ${y}H${x + T - a}L${x + T} ${y + a}V${y + T - a}L${x + T - a} ${y + T}H${x + a}L${x} ${y + T - a}V${y + a}Z`;
+    // eight-point star: two squares, one turned 45 degrees
+    const cx = x + T / 2, cy = y + T / 2, s = 17, k = s * Math.SQRT2;
+    d += `M${cx - s} ${cy - s}h${2 * s}v${2 * s}h${-2 * s}Z`;
+    d += `M${cx} ${cy - k}L${cx + k} ${cy}L${cx} ${cy + k}L${cx - k} ${cy}Z`;
+  }
+}
+const pts: { c: number; r: number }[] = [];
+if (nodes) for (let r = 0; r <= rows; r++) for (let c = 0; c <= cols; c++) pts.push({ c, r });
+const style = phoneCols ? `--phone-scale:${cols / phoneCols}` : '';
+---
+<div class={`jaali ${cls}`} id={id} data-jaali={id} aria-hidden="true" style={style}>
+  <svg viewBox={`0 0 ${cols * T} ${rows * T}`} preserveAspectRatio="xMinYMin meet" focusable="false">
+    <path d={d} />
+    {pts.map((p) => <circle class="jn" cx={p.c * T} cy={p.r * T} r="0.5" data-c={p.c} data-r={p.r} />)}
+  </svg>
+</div>

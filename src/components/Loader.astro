@@ -1,0 +1,10 @@
+---
+import { site } from '../data/site';
+---
+<div id="loader" role="status" aria-label="Loading">
+  <div class="loader__inner">
+    <span class="loader__name" data-loader-out>{site.short}</span>
+    <span class="loader__count" data-loader-out data-loader-count aria-hidden="true">000</span>
+  </div>
+  <div class="loader__bar" data-loader-bar></div>
+</div>

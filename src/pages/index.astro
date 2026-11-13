@@ -1,0 +1,163 @@
+---
+import Base from '../layouts/Base.astro';
+import Jaali from '../components/Jaali.astro';
+import { u, site, explainer, numbers, projects, bridges, studyIntro, studies, frameworks, promises, links, wallThreads } from '../data/site';
+
+// Hero wall: each thread hangs from its own column, at a different height, so the tags never collide.
+const hang = [
+  { node: '1,2', len: 2.1 }, { node: '2,1', len: 2.0 }, { node: '3,2', len: 3.0 }, { node: '4,1', len: 2.4 },
+  { node: '5,2', len: 2.5, phone: 'off' }, { node: '6,1', len: 1.8, phone: 'off' }, { node: '7,2', len: 2.9, phone: 'off' },
+];
+const drops = ['0rem', '4.5rem', '1.5rem', '6rem'];
+const studyDrops = ['0rem', '3rem', '1rem', '4rem', '2rem'];
+---
+<Base description={site.description}>
+  <!-- HERO -->
+  <section class="s hero" data-tone="cream" data-threads aria-labelledby="hero-title">
+    <div class="hero__copy">
+      <h1 id="hero-title" class="hero__title">
+        <span class="hero__name" data-reveal="up" data-intro>{site.name}.</span>
+        <span class="hero__head" data-reveal="up" data-intro data-delay="0.08">{site.headline}</span>
+      </h1>
+      <p class="hero__role" data-reveal="up" data-intro data-delay="0.18">{site.roleLine}</p>
+      <div class="hero__cta" data-reveal="up" data-intro data-delay="0.26">
+        <a class="btn btn--pink" href={`mailto:${site.email}`} data-fill><span class="btn__fill" aria-hidden="true"></span>Email me</a>
+        <a class="btn" href={site.resumePdf} download data-fill><span class="btn__fill" aria-hidden="true"></span>Download resume <span class="arrow" aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+    <div class="hero__wall">
+      <p class="hero__caption"><span lang="hi">मन्नत</span> mannat: a vow. Each thread is a promise. <a class="link" href="#meaning">What the thread means</a></p>
+      <Jaali id="hero-wall" cols={8} rows={3} phoneCols={6} />
+    </div>
+    {wallThreads.map((t, i) => (
+      <a class="tag" href={t.href} data-hang="hero-wall" data-node={hang[i].node} data-len={hang[i].len} data-phone={hang[i].phone} tabindex="-1" aria-hidden="true">
+        <span class="tag__short">{t.short}</span><span class="tag__label">{t.label}</span>
+      </a>
+    ))}
+    <ul class="glance" aria-label="At a glance">
+      {numbers.map((n, i) => (
+        <li data-reveal="up" data-intro data-delay={0.34 + i * 0.05}><b class="num">{n.v}</b><span>{n.l}</span></li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- WHAT THE THREAD MEANS -->
+  <section class="s s--normal meaning" id="meaning" data-tone="cream" data-threads aria-labelledby="meaning-title">
+    <div class="meaning__art">
+      <Jaali id="meaning-jaali" cols={3} rows={2} />
+    </div>
+    <span class="tag tag--quiet" data-hang="meaning-jaali" data-node="2,1" data-len="1.6" aria-hidden="true"></span>
+    <div class="meaning__copy">
+      <h2 id="meaning-title" class="h2" data-split="lines">{explainer.title}</h2>
+      {explainer.body.map((p, i) => <p class={i === 0 ? 'lead' : ''} data-reveal="up" data-delay={i * 0.08}>{p}</p>)}
+    </div>
+  </section>
+
+  <!-- SELECTED WORK -->
+  <section class="s s--normal work" id="work" data-tone="ink" data-threads aria-labelledby="work-title">
+    <div class="sec-head">
+      <h2 id="work-title" class="h2" data-split="lines">Selected work</h2>
+      <p class="sec-head__lede" data-reveal="up">Four places I made a promise to a client, a team or a board. Each card leads with what it changed for the business.</p>
+    </div>
+    <Jaali id="work-rail" cols={24} rows={1} phoneCols={12} class="rail" />
+    <ul class="cards">
+      {projects.map((p, i) => (
+        <li class="card" data-bind="work-rail" data-node="auto" data-phone="off" style={`--drop:${drops[i % drops.length]}`}>
+          <a class="card__link" href={u(`/work/${p.slug}/`)} data-cursor="Read">
+            <div class="card__cover"><img src={p.cover} alt={p.coverAlt} width="800" height="600" loading="lazy" decoding="async" /></div>
+            <p class="card__meta">{p.kind}, {p.year}</p>
+            <h3 class="card__title">{p.title}</h3>
+            <p class="card__outcome">{p.outcome}</p>
+            <p class="card__fact"><b class="num">{p.facts[0].v}</b><span>{p.facts[0].l}</span></p>
+            <span class="card__cta">Read the case <span class="arrow" aria-hidden="true">→</span></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="s s--normal skills" id="skills" data-tone="cream" data-threads aria-labelledby="skills-title">
+    <div class="sec-head">
+      <h2 id="skills-title" class="h2" data-split="lines">How design skills transfer to management</h2>
+      <p class="sec-head__lede" data-reveal="up">I trained as a designer. Now I run projects and businesses. These six skills made the jump. Choose one to see where I have used it.</p>
+    </div>
+    <div class="bridge">
+      <p class="bridge__heads" aria-hidden="true"><span>In design</span><span>In management</span></p>
+      <div class="bridge__strip" data-strip><Jaali id="bridge-strip" cols={2} rows={9} nodes={false} /></div>
+      <ol class="bridge__list" data-bridges>
+        {bridges.map((b, i) => (
+          <li class="bridge__item">
+            <button class="pair" type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`pair-${i}`} data-bridge>
+              <span class="pair__d" data-a>{b.design}</span>
+              <span class="sr-only">, in management becomes </span>
+              <span class="pair__m" data-b>{b.management}</span>
+            </button>
+            <div class="pair__panel" id={`pair-${i}`} hidden={i !== 0}>
+              <p class="pair__why">{b.why}</p>
+              <p class="pair__ex"><b>In practice.</b> {b.example}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- STUDY -->
+  <section class="s s--normal study" id="study" data-tone="cream" data-threads aria-labelledby="study-title">
+    <div class="sec-head">
+      <h2 id="study-title" class="h2" data-split="lines">{studyIntro.title}</h2>
+      <div class="sec-head__lede" data-reveal="up">
+        <p class="hl">{studyIntro.program}</p>
+        <p>{studyIntro.lede}</p>
+      </div>
+    </div>
+    <Jaali id="study-rail" cols={24} rows={1} phoneCols={12} class="rail" />
+    <ul class="mods">
+      {studies.map((s, i) => (
+        <li class="mod" data-bind="study-rail" data-node="auto" data-phone="off" style={`--drop:${studyDrops[i % studyDrops.length]}`} tabindex="0">
+          <h3 class="mod__title">{s.course}</h3>
+          <p class="mod__label">What it taught me</p>
+          <p>{s.learnt}</p>
+          <p class="mod__label">Where I used it</p>
+          <p>{s.applied}</p>
+        </li>
+      ))}
+    </ul>
+    <div class="frameworks" data-reveal="up">
+      <h3 class="h4">Frameworks I have used</h3>
+      <ul class="chips">{frameworks.map((f) => <li>{f}</li>)}</ul>
+      <p class="small muted">All from the Sculpted case. <a class="link" href={u('/work/sculpted-by-aimee/')}>Read it</a></p>
+    </div>
+  </section>
+
+  <!-- WHY HIRE ME -->
+  <section class="s s--normal why" id="why" data-tone="cream" aria-labelledby="why-title">
+    <div class="sec-head">
+      <h2 id="why-title" class="h2" data-split="lines">Why hire me</h2>
+      <p class="sec-head__lede" data-reveal="up">Three promises I make to every team. They are the threads I tie first.</p>
+    </div>
+    {site.video.src && (
+      <div class="why__video"><video controls preload="none" playsinline poster={site.video.poster || undefined} src={site.video.src}></video></div>
+    )}
+    <ol class="promises">
+      {promises.map((p, i) => (
+        <li class="promise" data-reveal="up" data-delay={i * 0.06}>
+          <svg class="promise__knot" viewBox="-14 -10 28 20" aria-hidden="true"><circle cx="-4" cy="0" r="7" /><circle cx="4" cy="0" r="7" /></svg>
+          <h3>{p.title}</h3>
+          <p>{p.text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- ELSEWHERE -->
+  <section class="s s--tight elsewhere" id="elsewhere" data-tone="cream" aria-labelledby="else-title">
+    <h2 id="else-title" class="h3">Writing and design work</h2>
+    <ul class="rows">
+      {links.map((l) => (
+        <li><a class="row" href={l.href} rel="me noopener"><span class="row__t">{l.label}</span><span class="row__n">{l.note}</span><span class="arrow" aria-hidden="true">↗</span></a></li>
+      ))}
+    </ul>
+  </section>
+</Base>

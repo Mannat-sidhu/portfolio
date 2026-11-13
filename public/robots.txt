@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mannat-sidhu.github.io/portfolio/sitemap-index.xml

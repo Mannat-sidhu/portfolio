@@ -1,0 +1,74 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { site, links, u } from '../data/site';
+import Loader from '../components/Loader.astro';
+import Header from '../components/Header.astro';
+import Contact from '../components/Contact.astro';
+import '../styles/tokens.css';
+import '../styles/engine.css';
+import '../styles/site.css';
+
+interface Props { title?: string; description?: string; image?: string; noContact?: boolean }
+const { title, description = site.description, image = u('/og.png') } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Manager with a designer’s eye`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const ogImage = new URL(image, Astro.site ?? site.url).href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  description: site.description,
+  url: site.url,
+  email: `mailto:${site.email}`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Dublin', addressCountry: 'IE' },
+  alumniOf: site.alumniOf.map((name) => ({ '@type': 'EducationalOrganization', name })),
+  knowsAbout: site.knowsAbout,
+  seeks: { '@type': 'Demand', description: site.openTo },
+  sameAs: links.map((l) => l.href),
+};
+---
+<!doctype html>
+<html lang="en" transition:animate="none" data-tone="cream">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#fff8ec" />
+    <link rel="icon" href={u('/favicon.svg')} type="image/svg+xml" />
+    <link rel="sitemap" href={u('/sitemap-index.xml')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <link rel="preload" href={u('/fonts/cabinet-800-normal.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={u('/fonts/switzer-400-normal.woff2')} as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+    </script>
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="curtain" transition:persist="curtain" aria-hidden="true"><div class="curtain__panel"></div></div>
+    <div id="cursor" transition:persist="cursor" aria-hidden="true"><span data-cursor-label></span></div>
+    <Loader />
+    <div class="page">
+      <Header current={Astro.url.pathname} />
+      <main id="main" tabindex="-1">
+        <slot />
+      </main>
+      {!Astro.props.noContact && <Contact />}
+    </div>
+    <script>
+      import { start } from '../engine/astro';
+      import { setupMotion } from '../motion/setup';
+      start(setupMotion);
+    </script>
+  </body>
+</html>

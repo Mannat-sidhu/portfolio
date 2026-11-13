@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import Jaali from '../components/Jaali.astro';
+import { site, resume, bridges } from '../data/site';
+const entries = [...resume.entries].sort((a, b) => (a.start < b.start ? 1 : -1));
+const openByDefault = new Set(['MSc Management', 'Founder and brand strategy consultant', 'Business operations and marketing', 'Associate graphic designer']);
+const filters = [
+  { id: 'all', label: 'All' },
+  { id: 'management', label: 'Management' },
+  { id: 'business', label: 'Business' },
+  { id: 'design', label: 'Design' },
+];
+---
+<Base title="Resume" description="Mannat Sidhu’s resume: MSc Management at UCD Smurfit, founder of Pehchaan Creative, ex-BCG. Filter by management, business or design, or get the PDF.">
+  <section class="s cv-head" data-tone="cream" aria-labelledby="cv-title">
+    <div class="print-only">
+      <p class="print-name">{site.name}</p>
+      <p class="print-contact">{site.location} | {site.email} | linkedin.com/in/mannatsidhu1 | mannat-sidhu.github.io/portfolio</p>
+    </div>
+    <h1 id="cv-title" class="cv-head__title" data-reveal="up" data-intro>Resume</h1>
+    <p class="cv-head__sum" data-reveal="up" data-intro data-delay="0.1">{resume.summary}</p>
+    <div class="hero__cta" data-reveal="up" data-intro data-delay="0.18">
+      <a class="btn" href={site.resumePdf} download data-fill><span class="btn__fill" aria-hidden="true"></span>Download PDF <span class="arrow" aria-hidden="true">↓</span></a>
+      <a class="btn btn--pink" href={`mailto:${site.email}`} data-fill><span class="btn__fill" aria-hidden="true"></span>Email me</a>
+    </div>
+    <div class="cv-bridges" data-reveal="up" data-intro data-delay="0.26">
+      <h2 class="h4">Design skills I use in management</h2>
+      <ul>{bridges.map((b) => <li><span>{b.design}</span><span class="cv-bridges__to" aria-hidden="true"></span><span class="sr-only"> becomes </span><b>{b.management}</b></li>)}</ul>
+    </div>
+  </section>
+
+  <section class="s timeline" data-tone="cream" data-threads aria-labelledby="tl-title">
+    <div class="timeline__bar">
+      <h2 id="tl-title" class="h3">Experience, education and leadership</h2>
+      <div class="filters" data-filters role="group" aria-label="Filter the resume">
+        {filters.map((f) => <button type="button" class="chip-btn" data-filter={f.id} aria-pressed={f.id === 'all' ? 'true' : 'false'}>{f.label}</button>)}
+      </div>
+      <p class="sr-only" aria-live="polite" data-filter-status></p>
+    </div>
+    <div class="timeline__body">
+      <div class="timeline__strip"><Jaali id="cv-strip" cols={2} rows={60} /></div>
+      <ol class="entries">
+        {entries.map((e) => (
+          <li class="entry" data-tags={e.tags.join(' ')} data-bind="cv-strip" data-node="auto" data-anchor="left">
+            <details open={openByDefault.has(e.title)}>
+              <summary>
+                <span class="entry__when num">{e.when}</span>
+                <span class="entry__main">
+                  <span class="entry__title">{e.title}</span>
+                  <span class="entry__org">{e.org}, {e.place}</span>
+                </span>
+                <span class="entry__tags">
+                  <span class="entry__group">{e.group}</span>
+                  {e.tags.map((t) => <span class={`tagchip tagchip--${t}`}>{t}</span>)}
+                </span>
+              </summary>
+              <ul class="entry__bullets">{e.bullets.map((b) => <li>{b}</li>)}</ul>
+            </details>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="s s--tight cv-skills" data-tone="cream" aria-labelledby="sk-title">
+    <h2 id="sk-title" class="h3">Skills</h2>
+    <div class="cv-skills__grid">
+      {resume.skills.map((g) => (
+        <div><h3 class="h4">{g.group}</h3><ul class="chips">{g.items.map((s) => <li>{s}</li>)}</ul></div>
+      ))}
+    </div>
+    <p><a class="btn" href={site.resumePdf} download data-fill><span class="btn__fill" aria-hidden="true"></span>Download PDF <span class="arrow" aria-hidden="true">↓</span></a></p>
+  </section>
+</Base>

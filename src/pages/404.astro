@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import Jaali from '../components/Jaali.astro';
+import { u } from '../data/site';
+---
+<Base title="Page not found" description="Nothing is tied here. The page you were looking for does not exist; head back to Mannat Sidhu's home page." noContact>
+  <section class="s lost" data-tone="cream" aria-labelledby="lost-title">
+    <Jaali id="lost-wall" cols={12} rows={2} phoneCols={6} nodes={false} class="lost__wall" />
+    <h1 id="lost-title" data-split="lines" data-intro>Nothing is tied here.</h1>
+    <p class="lead measure" data-reveal="up" data-intro data-delay="0.2">This page does not exist. Every thread on this site leads somewhere real, so let me take you back to one.</p>
+    <div data-reveal="up" data-intro data-delay="0.3"><a class="btn" href={u('/')} data-fill><span class="btn__fill" aria-hidden="true"></span>Back to the home page <span class="arrow" aria-hidden="true">↗</span></a></div>
+  </section>
+</Base>

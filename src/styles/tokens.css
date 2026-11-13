@@ -1,0 +1,56 @@
+/* Mannat v2: tokens. Cream ground, ink type, accents with one job each. See DESIGN.md. */
+@font-face { font-family: 'Cabinet'; src: url('/fonts/cabinet-800-normal.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: swap; }
+/* Mukta 700, subset to the four glyphs of मन्नत (1.7 KB, OFL) */
+@font-face { font-family: 'Mannat Deva'; src: url('/fonts/mukta-700-mannat.woff2') format('woff2'); font-weight: 700; font-display: swap; unicode-range: U+0924, U+0928, U+092E, U+094D; }
+@font-face { font-family: 'Switzer'; src: url('/fonts/switzer-400-normal.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('/fonts/switzer-500-normal.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Switzer'; src: url('/fonts/switzer-600-normal.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+
+:root {
+  /* palette */
+  --cream: #fff8ec;
+  --cream-2: #f6ead3;   /* stone: the jaali's own colour, cards */
+  --ink: #1a0f2e;
+  --thread: #e5260d;    /* ONLY threads and knots */
+  --turmeric: #ffc21a;  /* ONLY highlight bands behind one idea per section */
+  --pink: #ff3e8e;      /* ONLY the visitor's thread and the Email me action */
+
+  /* roles (default tone = cream) */
+  --c-bg: var(--cream);
+  --c-fg: var(--ink);
+  --c-muted: #5b4f68;
+  --c-line: rgb(26 15 46 / 0.16);
+  --c-lattice: rgb(26 15 46 / 0.2);
+  --c-card: var(--cream-2);
+  --c-accent: var(--ink);
+  --c-curtain: var(--ink);
+  --hdr-fg: var(--ink);
+
+  --f-display: 'Cabinet', 'Arial Black', system-ui, sans-serif;
+  --f-body: 'Switzer', system-ui, sans-serif;
+
+  --t-mega: clamp(3.6rem, 1rem + 11vw, 13rem);
+  --t-xl: clamp(2.4rem, 1.3rem + 4.6vw, 5.75rem);
+  --t-l: clamp(1.7rem, 1.2rem + 2vw, 3rem);
+  --t-m: clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem);
+  --t-body: clamp(1.0625rem, 1rem + 0.2vw, 1.1875rem);
+  --t-s: 0.9375rem;
+  --t-xs: 0.8125rem;
+
+  --u: clamp(0.5rem, 0.35rem + 0.6vw, 1rem);
+  --gutter: clamp(1.1rem, 0.6rem + 1.8vw, 2.75rem);
+  --spine: clamp(1.75rem, 0.9rem + 3.2vw, 4.5rem); /* case pages only: the column the story thread runs in */
+  --radius: 0px;
+
+  --z-thread: 3;
+  --z-header: 50;
+  --z-cursor: 80;
+  --z-curtain: 90;
+  --z-loader: 100;
+}
+
+[data-tone='cream'] { --c-bg: var(--cream); --c-fg: var(--ink); --c-muted: #5b4f68; --c-line: rgb(26 15 46 / 0.16); --c-lattice: rgb(26 15 46 / 0.2); --c-card: var(--cream-2); --c-accent: var(--ink); }
+[data-tone='ink']   { --c-bg: var(--ink); --c-fg: var(--cream); --c-muted: #cbc1db; --c-line: rgb(255 248 236 / 0.2); --c-lattice: rgb(255 248 236 / 0.22); --c-card: #2a1f40; --c-accent: var(--turmeric); }
+
+html[data-tone='ink'] { --hdr-fg: var(--cream); }
+html[data-tone='cream'] { --hdr-fg: var(--ink); }

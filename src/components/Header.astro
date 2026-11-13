@@ -1,0 +1,29 @@
+---
+import { site, u } from '../data/site';
+interface Props { current?: string }
+const { current = '/' } = Astro.props;
+const links = [
+  { label: 'Work', href: u('/#work') },
+  { label: 'Skills', href: u('/#skills') },
+  { label: 'Study', href: u('/#study') },
+  { label: 'Resume', href: u('/resume/') },
+];
+---
+<header class="hdr">
+  <a class="hdr__name roll" href={u('/')} aria-label={`${site.name}, home`}><span>{site.name}</span><span aria-hidden="true">{site.name}</span></a>
+  <p class="hdr__status"><span class="dot" aria-hidden="true"></span>{site.openToShort}</p>
+  <nav class="hdr__nav" aria-label="Primary">
+    {links.map((l) => (
+      <a class="roll" href={l.href} aria-current={!l.href.includes('#') && current.startsWith(l.href.replace(/\/$/, '')) ? 'page' : undefined}>
+        <span>{l.label}</span><span aria-hidden="true">{l.label}</span>
+      </a>
+    ))}
+    <a class="pill" href={`mailto:${site.email}`}>Email me</a>
+  </nav>
+  <button class="hdr__menu" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+</header>
+<nav id="menu" aria-label="Menu">
+  {links.map((l) => <a href={l.href}><span>{l.label}</span></a>)}
+  <a href={`mailto:${site.email}`}><span>Email me</span></a>
+  <p class="menu__meta small">{site.openToShort}, based in {site.location}.</p>
+</nav>

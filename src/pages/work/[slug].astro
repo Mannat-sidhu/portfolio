@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import { projects, u } from '../../data/site';
+export function getStaticPaths() {
+  return projects.map((p, i) => ({ params: { slug: p.slug }, props: { p, next: projects[(i + 1) % projects.length] } }));
+}
+const { p, next } = Astro.props;
+const chapters = [
+  { h: 'The brief', t: p.brief, knot: '' },
+  p.hard ? { h: 'The hard part', t: p.hard, knot: 'tangle' } : null,
+  { h: 'What shipped', t: p.shipped, knot: '' },
+  p.impact ? { h: 'What it changed for the business', t: p.impact, knot: 'untied' } : null,
+].filter(Boolean) as { h: string; t: string; knot: string }[];
+---
+<Base title={p.title} description={`${p.title}: ${p.outcome}`.slice(0, 158)} image={u('/og.png')}>
+  <section class="s spined case-hero" data-tone="cream" aria-labelledby="case-title">
+    <div class="case-hero__copy">
+      <span data-knot></span>
+      <p class="card__meta">{p.kind}, {p.year}</p>
+      <h1 id="case-title" class="case-hero__title" data-split="lines" data-intro>{p.title}</h1>
+      <p class="lead measure" data-reveal="up" data-intro data-delay="0.2">{p.outcome}</p>
+      <p class="small muted" data-reveal="up" data-intro data-delay="0.26">{p.role}</p>
+    </div>
+    <div class="case-hero__cover" data-reveal="clip" data-intro>
+      <img src={p.cover} alt={p.coverAlt} width="800" height="600" fetchpriority="high" decoding="async" />
+    </div>
+    <ul class="facts" aria-label="Key numbers">
+      {p.facts.map((f, i) => <li data-reveal="up" data-intro data-delay={0.3 + i * 0.05}><b class="num">{f.v}</b><span>{f.l}</span></li>)}
+    </ul>
+  </section>
+
+  <section class="s spined case-body" data-tone="cream">
+    {chapters.map((c) => (
+      <div class="chapter">
+        <span data-knot={c.knot || undefined}></span>
+        <h2 data-split="lines">{c.h}</h2>
+        <p data-reveal="up">{c.t}</p>
+      </div>
+    ))}
+    {p.note && <p class="case-note small muted">{p.note}</p>}
+  </section>
+
+  <a class="s spined next" href={u(`/work/${next.slug}/`)} data-tone="ink" data-cursor="Next">
+    <span class="small">Next project</span>
+    <span class="next__t">{next.title}</span>
+    <span class="next__o">{next.outcome}</span>
+  </a>
+</Base>
